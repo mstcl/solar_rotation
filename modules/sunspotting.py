@@ -6,7 +6,7 @@ Find the coordinate of sunspots
 from os.path import exists as file_exists
 import numpy as np
 from numpy.lib.function_base import average
-from . import helper
+import helper
 
 
 def parse_data(

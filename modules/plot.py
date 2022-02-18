@@ -3,7 +3,7 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-from . import helper
+import helper
 
 
 def plot_equator(x_arr: np.ndarray, y_arr: np.ndarray, sequence: str, line: tuple):

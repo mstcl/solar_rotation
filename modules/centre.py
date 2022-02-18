@@ -3,7 +3,7 @@
 
 from os.path import exists as file_exists
 import numpy as np
-from . import helper
+import helper
 
 
 def parse_data(files_num: int, sequence: str):
