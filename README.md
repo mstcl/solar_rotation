@@ -29,8 +29,8 @@ specifically named.
 * [x] Parse all and analyse data
   * [x] Variables
   * [x] Results
-* [] Include error calculations
-* [] Produce final plots
+* [ ] Include error calculations
+* [ ] Produce final plots
 
 ## LICENSE
 
