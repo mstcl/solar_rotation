@@ -65,32 +65,5 @@ def get_radius(r_x: float, r_y: float):
     return (r_x**2 + r_y**2) ** (1 / 2)
 
 
-def write_data(radii: np.ndarray, sequence: str):
-    """
-    Write to data.txt the radii of the sunspots
-    """
-    if not file_exists(f"./{sequence}/data.txt"):
-        raise FileNotFoundError(
-            f"./{sequence}/data.txt was not found in this sequence. Run init.sh first."
-        )
-    with open(f"./{sequence}/data.txt", "r", encoding="utf-8") as old_file:
-        data = old_file.readlines()
-
-    changed = False
-    for j, radius in enumerate(radii):
-        for i, line in enumerate(data):
-            if "".join(line[0:2]) == f"R{j+1}":
-                data[i] = f"R{j+1} {radius}\n"
-                changed = True
-                break
-    if not changed:
-        for j, radius in enumerate(radii):
-            data.append(f"R{j+1} {radius}\n")
-
-    with open(f"./{sequence}/data.txt", "w", encoding="utf-8") as new_file:
-        new_file.writelines(data)
-    return True
-
-
 if __name__ == "__main__":
     print("This file is not supposed to be executed directly")

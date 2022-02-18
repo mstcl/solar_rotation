@@ -35,29 +35,5 @@ def parse_data(files_num: int, sequence: str):
     return x_arr, y_arr, np.average(radii)
 
 
-def write_data(radius_disc: float, sequence: str):
-    """
-    Write to data.txt the radii of the sunspots
-    """
-    if not file_exists(f"./{sequence}/data.txt"):
-        raise FileNotFoundError(
-            f"./{sequence}/data.txt was not found in this sequence. Run init.sh first."
-        )
-    with open(f"./{sequence}/data.txt", "r", encoding="utf-8") as old_file:
-        data = old_file.readlines()
-
-    changed = False
-    for i, line in enumerate(data):
-        if line[0] == "r":
-            data[i] = f"r {radius_disc}\n"
-            changed = True
-            break
-    if not changed:
-        data.append(f"r {radius_disc}\n")
-    with open(f"./{sequence}/data.txt", "w", encoding="utf-8") as new_file:
-        new_file.writelines(data)
-    return True
-
-
 if __name__ == "__main__":
     print("This file is not supposed to be executed directly")

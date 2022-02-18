@@ -4,6 +4,7 @@
 import argparse
 
 import numpy as np
+from modules import helper
 from modules import equator
 from modules import centre
 from modules import plot
@@ -21,9 +22,10 @@ def resolve_args(args):
         files_num = int(args.number)
         sequence = args.sequence
         x_arr, y_arr, radius_disc = centre.parse_data(files_num, sequence)
-        is_radius_saved = centre.write_data(float(radius_disc), sequence)
+        is_radius_saved = helper.write_data("r", float(radius_disc), sequence)
         if args.normal:
-            is_normal_saved = equator.write_data(x_arr, y_arr, sequence)
+            normal = f"N {-1 / equator.get_line(x_arr, y_arr)[0]}\n"
+            is_normal_saved = helper.write_data("N", normal, sequence)
         if args.plot:
             is_plot_saved = plot.plot_equator(
                 x_arr, y_arr, sequence, equator.get_line(x_arr, y_arr)
@@ -62,8 +64,8 @@ def resolve_sunspots(
         angle_spots[spot] = theta.get_angle(
             float(r_x), float(r_y), -1 / equator.get_line(x_arr, y_arr)[0]
         )
-    is_sunspots_saved = theta.write_data(angle_spots, sequence)
-    is_sunspots_saved = sunspotting.write_data(radii_spots, sequence)
+    is_sunspots_saved = helper.write_data("A", angle_spots, sequence)
+    is_sunspots_saved = helper.write_data("S", radii_spots, sequence)
     return is_sunspots_saved
 
 
@@ -72,7 +74,7 @@ def resolve_results(args, sequence: str):
     Separate function to fetch and write the final results
     """
     all_i = results.driver(sequence, int(args.result))
-    is_result_saved = results.write_data(all_i, sequence)
+    is_result_saved = helper.write_data("I", all_i, sequence)
     return is_result_saved
 
 
