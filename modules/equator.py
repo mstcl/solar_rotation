@@ -2,6 +2,7 @@
 """Find the equation of the line given a set of x,y values"""
 
 import numpy as np
+from . import helper
 
 
 def get_line(x_arr: np.ndarray, y_arr: np.ndarray):
@@ -10,4 +11,4 @@ def get_line(x_arr: np.ndarray, y_arr: np.ndarray):
 
 
 if __name__ == "__main__":
-    print("This file is not supposed to be executed directly")
+    helper.warn_module()

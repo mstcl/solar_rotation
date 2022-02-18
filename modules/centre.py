@@ -3,6 +3,7 @@
 
 from os.path import exists as file_exists
 import numpy as np
+from . import helper
 
 
 def parse_data(files_num: int, sequence: str):
@@ -36,4 +37,4 @@ def parse_data(files_num: int, sequence: str):
 
 
 if __name__ == "__main__":
-    print("This file is not supposed to be executed directly")
+    helper.warn_module()

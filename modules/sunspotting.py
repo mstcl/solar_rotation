@@ -6,6 +6,7 @@ Find the coordinate of sunspots
 from os.path import exists as file_exists
 import numpy as np
 from numpy.lib.function_base import average
+from . import helper
 
 
 def parse_data(
@@ -66,4 +67,4 @@ def get_radius(r_x: float, r_y: float):
 
 
 if __name__ == "__main__":
-    print("This file is not supposed to be executed directly")
+    helper.warn_module()

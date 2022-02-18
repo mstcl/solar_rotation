@@ -6,6 +6,7 @@ sunspots in the sequence
 
 from os.path import exists as file_exists
 import numpy as np
+from . import helper
 
 
 def parse_data(sequence: str, spots: int):
@@ -97,4 +98,4 @@ def driver(sequence: str, spots: int):
 
 
 if __name__ == "__main__":
-    print("This file is not supposed to be executed directly")
+    helper.warn_module()

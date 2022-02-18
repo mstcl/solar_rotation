@@ -40,3 +40,13 @@ def write_data(heading:str, values, sequence:str):
     with open(f"./{sequence}/data.txt", "w", encoding="utf-8") as new_file:
         new_file.writelines(data)
     return True
+
+
+def warn_module():
+    """
+    Print a warning for modules that are not supposed to be executed
+    """
+    print("This file is not supposed to be executed directly")
+
+if __name__ == "__main__":
+    warn_module()
