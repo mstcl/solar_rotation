@@ -1,1 +1,0 @@
-for %%f in (*.bmp) do (convert.exe %%f %%~nf.fits)
