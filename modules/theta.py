@@ -4,7 +4,7 @@ Find the angle between celestial north and sunspot
 """
 
 import numpy as np
-import helper
+from . import helper
 
 
 def get_angle(r_x:float, r_y:float, normal:float):

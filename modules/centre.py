@@ -3,24 +3,24 @@
 
 from os.path import exists as file_exists
 import numpy as np
-import helper
+from . import helper
 
 
-def parse_data(files_num: int, sequence: str):
+def parse_data(files_num: list, sequence: str):
     """
     Go through each file and appends centre coordinate
     """
-    x_arr, y_arr = np.zeros(files_num, dtype="float64"), np.zeros(
-        files_num, dtype="float64"
+    x_arr, y_arr = np.zeros(max(files_num), dtype="float64"), np.zeros(
+        max(files_num), dtype="float64"
     )
     radii = np.array(x_arr)
-    for file in range(files_num):
-        if not file_exists(f"./{sequence}/regions/sun_disc_{file+1}.reg"):
+    for file in files_num:
+        if not file_exists(f"./{sequence}/regions/sun_disc_{file}.reg"):
             raise FileNotFoundError(
                 "Check name format, sequence name, and number of files and try again.\n"
             )
         with open(
-            f"./{sequence}/regions/sun_disc_{file+1}.reg", "r", encoding="utf-8"
+            f"./{sequence}/regions/sun_disc_{file}.reg", "r", encoding="utf-8"
         ) as regionfile:
             data = np.array(
                 list(
@@ -30,10 +30,17 @@ def parse_data(files_num: int, sequence: str):
                     )
                 )
             )
-        x_arr[file] = data[0]
-        y_arr[file] = data[1]
-        radii[file] = data[2]
-    return x_arr, y_arr, np.average(radii)
+        x_arr[file - 1] = data[0]
+        y_arr[file - 1] = data[1]
+        radii[file - 1] = data[2]
+    missing_indices = [
+        n - 1 for n in range(max(files_num)) if n not in files_num and n != 0
+    ]
+    return (
+        np.delete(x_arr, missing_indices),
+        np.delete(y_arr, missing_indices),
+        np.average(np.delete(radii, missing_indices)),
+    )
 
 
 if __name__ == "__main__":

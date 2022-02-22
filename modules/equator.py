@@ -2,7 +2,7 @@
 """Find the equation of the line given a set of x,y values"""
 
 import numpy as np
-import helper
+from . import helper
 
 
 def get_line(x_arr: np.ndarray, y_arr: np.ndarray):
