@@ -6,7 +6,7 @@ import numpy as np
 from . import helper
 
 
-def parse_data(files_num: list, sequence: str):
+def parse_data(files_num: list, sequence: str, full: bool):
     """
     Go through each file and appends centre coordinate
     """
@@ -36,6 +36,12 @@ def parse_data(files_num: list, sequence: str):
     missing_indices = [
         n - 1 for n in range(max(files_num)) if n not in files_num and n != 0
     ]
+    if full:
+        return (
+            x_arr,
+            y_arr,
+            np.average(np.delete(radii, missing_indices)),
+        )
     return (
         np.delete(x_arr, missing_indices),
         np.delete(y_arr, missing_indices),

@@ -38,7 +38,7 @@ def resolve_args(args):
         ) = is_normal_saved = is_sunspots_saved = is_result_saved = False
         files_num = get_files_num(args.number)
         sequence = args.sequence
-        x_arr, y_arr, radius_disc = centre.parse_data(files_num, sequence)
+        x_arr, y_arr, radius_disc = centre.parse_data(files_num, sequence, False)
         if args.radius:
             is_radius_saved = helper.write_data("r", float(radius_disc), sequence)
         if args.normal:
@@ -50,10 +50,10 @@ def resolve_args(args):
             )
         if args.sunspot:
             is_sunspots_saved = resolve_sunspots(
-                args, sequence, files_num, x_arr, y_arr
+                args, sequence, files_num
             )
         if args.result:
-            resolve_results(args, sequence)
+            is_result_saved = resolve_results(args, sequence)
         if args.verbose:
             print_output(
                 is_plot_saved,
@@ -67,7 +67,7 @@ def resolve_args(args):
 
 
 def resolve_sunspots(
-    args, sequence: str, files_num: list, x_arr: np.ndarray, y_arr: np.ndarray
+    args, sequence: str, files_num: list
 ):
     """
     Separate function to find and write sunspots information
@@ -75,6 +75,7 @@ def resolve_sunspots(
     spots = int(args.sunspot)
     radii_spots = np.zeros(spots, dtype="float64")
     angle_spots = np.zeros(spots, dtype="float64")
+    x_arr, y_arr, _ = centre.parse_data(files_num, sequence, True)
     for spot in range(spots):
         r_x = sunspotting.parse_data(0, x_arr, files_num, spot + 1, sequence)
         r_y = sunspotting.parse_data(1, y_arr, files_num, spot + 1, sequence)
@@ -83,7 +84,7 @@ def resolve_sunspots(
             float(r_x), float(r_y), -1 / equator.get_line(x_arr, y_arr)[0]
         )
     is_sunspots_saved = helper.write_data("A", angle_spots, sequence)
-    is_sunspots_saved = helper.write_data("S", radii_spots, sequence)
+    is_sunspots_saved = helper.write_data("R", radii_spots, sequence)
     return is_sunspots_saved
 
 

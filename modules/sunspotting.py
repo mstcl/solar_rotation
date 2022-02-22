@@ -16,7 +16,7 @@ def parse_data(
     Parse coordinates for all images
     """
     key_coord = {0: "y", 1: "x"}
-    data = np.zeros(files_num)
+    data = np.zeros(max(files_num))
     for file in files_num:
         if not file_exists(
             f"./{sequence}/regions/{key_coord.get(criteria)}_const_{file}.reg"
@@ -47,7 +47,7 @@ def parse_data(
                 encoding="utf-8",
             ) as sunspot_file:
                 # TODO: error
-                data[file] = (
+                data[file - 1] = (
                     average(
                         [
                             float(line.strip("\n").split(" ")[0])
@@ -55,7 +55,7 @@ def parse_data(
                         ]
                     )
                     + projection_origin
-                ) - arr[file]
+                ) - arr[file - 1]
     return average(data)
 
 

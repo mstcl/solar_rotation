@@ -27,7 +27,7 @@ def write_data(heading:str, values, sequence:str):
                     break
         if not changed:
             for j, val in enumerate(values):
-                data.append(f"R{j+1} {val}\n")
+                data.append(f"{heading}{j+1} {val}\n")
     else:
         for i, line in enumerate(data):
             if line[0] == heading:
