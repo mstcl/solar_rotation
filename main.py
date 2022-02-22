@@ -49,9 +49,7 @@ def resolve_args(args):
                 x_arr, y_arr, sequence, equator.get_line(x_arr, y_arr)
             )
         if args.sunspot:
-            is_sunspots_saved = resolve_sunspots(
-                args, sequence, files_num
-            )
+            is_sunspots_saved = resolve_sunspots(args, sequence, files_num)
         if args.result:
             is_result_saved = resolve_results(args, sequence)
         if args.verbose:
@@ -66,9 +64,7 @@ def resolve_args(args):
         print("Program needs some data to parse! Run with -h for help")
 
 
-def resolve_sunspots(
-    args, sequence: str, files_num: list
-):
+def resolve_sunspots(args, sequence: str, files_num: list):
     """
     Separate function to find and write sunspots information
     """
