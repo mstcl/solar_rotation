@@ -7,6 +7,6 @@ do
         dirclean=${dir%*/}
         dirclean="${dirclean##*/}"
         dirclean=$(echo "${dirclean}" | cut -d"_" -f2,3)
-        echo "${dirclean}" > "./${dir}/data.txt"
+        echo "D ${dirclean}" > "./${dir}/data.txt"
     fi
 done
