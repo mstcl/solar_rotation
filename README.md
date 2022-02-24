@@ -44,7 +44,7 @@ Check source code for details on what they do and the arguments required.
 * [x] Parse all and analyse data
   * [x] Variables
   * [x] Results
-* [ ] Include error calculations
+* [x] Include error calculations
 * [ ] Produce final plots
 
 ## LICENSE
