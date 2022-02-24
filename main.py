@@ -38,9 +38,12 @@ def resolve_args(args):
         ) = is_normal_saved = is_sunspots_saved = is_result_saved = False
         files_num = get_files_num(args.number)
         sequence = args.sequence
-        x_arr, y_arr, radius_disc = centre.parse_data(files_num, sequence, False)
+        x_arr, y_arr, radii_disc = centre.parse_data(files_num, sequence, False)
         if args.radius:
-            is_radius_saved = helper.write_data("r", float(radius_disc), sequence)
+            is_radius_saved = helper.write_data(
+                "r", helper.find_average(radii_disc), sequence
+            )
+            resolve_radius_errors(radii_disc, sequence, len(files_num))
         if args.normal:
             normal = -1 / equator.get_line(x_arr, y_arr)[0]
             is_normal_saved = helper.write_data("N", normal, sequence)
@@ -64,6 +67,14 @@ def resolve_args(args):
         print("Program needs some data to parse! Run with -h for help")
 
 
+def resolve_radius_errors(radii_pop: np.ndarray, sequence: str, size: int):
+    """
+    Separate function to find and write sun disc radii
+    """
+    radii_std = helper.find_std(radii_pop, size)
+    _ = helper.write_data("Dr", radii_std, sequence)
+
+
 def resolve_sunspots(args, sequence: str, files_num: list):
     """
     Separate function to find and write sunspots information
@@ -71,25 +82,53 @@ def resolve_sunspots(args, sequence: str, files_num: list):
     spots = int(args.sunspot)
     radii_spots = np.zeros(spots, dtype="float64")
     angle_spots = np.zeros(spots, dtype="float64")
+    radii_pop = np.zeros(spots, dtype="float64")
+    angle_pop = np.zeros(spots, dtype="float64")
     x_arr, y_arr, _ = centre.parse_data(files_num, sequence, True)
     for spot in range(spots):
         r_x = sunspotting.parse_data(0, x_arr, files_num, spot + 1, sequence)
         r_y = sunspotting.parse_data(1, y_arr, files_num, spot + 1, sequence)
-        radii_spots[spot] = sunspotting.get_radius(float(r_x), float(r_y))
-        angle_spots[spot] = theta.get_angle(
-            float(r_x), float(r_y), -1 / equator.get_line(x_arr, y_arr)[0]
+        radii_pop = sunspotting.get_radius(r_x, r_y)
+        angle_pop = theta.get_angle(r_x, r_y, -1 / equator.get_line(x_arr, y_arr)[0])
+        radii_spots[spot] = helper.find_average(radii_pop)
+        angle_spots[spot] = helper.find_average(angle_pop)
+        resolve_sunspots_errors(
+            radii_pop,
+            angle_pop,
+            len(files_num),
+            sequence,
+            spot
         )
-    is_sunspots_saved = helper.write_data("A", angle_spots, sequence)
+    _ = helper.write_data("A", angle_spots, sequence)
     is_sunspots_saved = helper.write_data("R", radii_spots, sequence)
     return is_sunspots_saved
+
+
+def resolve_sunspots_errors(
+    radii_pop: np.ndarray,
+    angle_pop: np.ndarray,
+    size: int,
+    sequence: str,
+    spot: int
+):
+    """
+    Separate function for sunspot errors
+    """
+    radii_std = helper.find_std(radii_pop, size)
+    angle_std = helper.find_std(angle_pop, size)
+    _ = helper.write_data(f"DR{spot+1}", radii_std, sequence)
+    _ = helper.write_data(f"DA{spot+1}", angle_std, sequence)
 
 
 def resolve_results(args, sequence: str):
     """
     Separate function to fetch and write the final results
     """
-    all_i = results.driver(sequence, int(args.result))
-    is_result_saved = helper.write_data("I", all_i, sequence)
+    long_data, lat_data = results.driver(sequence, int(args.result))
+    _ = helper.write_data("I", long_data[0], sequence)
+    _ = helper.write_data("DI", long_data[1], sequence)
+    _ = helper.write_data("K", lat_data[0], sequence)
+    is_result_saved = helper.write_data("DK", lat_data[1], sequence)
     return is_result_saved
 
 
@@ -143,13 +182,13 @@ def print_output(
     if is_plot_saved:
         print("Plot saved as equatorial_plane.png")
     if is_sunspots_saved:
-        print("Update data.txt with sunspot(s) radius and theta")
+        print("Update data.txt with sunspot(s) radius and theta.")
     if is_normal_saved:
-        print("Update data.txt with value of the normal")
+        print("Update data.txt with value of the normal.")
     if is_result_saved:
-        print("Update data.txt with values of I")
+        print("Update data.txt with values of I and B.")
     if is_radius_saved:
-        print("Update data.txt with the average disc radius")
+        print("Update data.txt with the average disc radius.")
 
 
 if __name__ == "__main__":
