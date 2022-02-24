@@ -4,7 +4,26 @@ Frequently used functions
 """
 
 from os.path import exists as file_exists
+from numpy.lib.function_base import average
 import numpy as np
+
+
+def find_std(data: np.ndarray, num: int):
+    """
+    Find the standard deviation on the mean of a sample
+    """
+    sample_var = 0
+    for var in data:
+        sample_var += (var - find_average(data)) ** 2
+    sample_var = (sample_var / num) ** (1 / 2)
+    return sample_var / (num - 1) ** (1 / 2)
+
+
+def find_average(data: np.ndarray):
+    """
+    Return the average of an array
+    """
+    return average(data)
 
 
 def write_data(heading: str, values, sequence: str):
