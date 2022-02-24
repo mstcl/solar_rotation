@@ -14,7 +14,7 @@ def plot_equator(x_arr: np.ndarray, y_arr: np.ndarray, sequence: str, line: tupl
     plt.plot(x_arr, y_arr, "xb", label="data points")
     plt.plot(
         x_arr, y_int, "r-", label="interpolated"
-    )  # TODO: errors of the circles drawn
+    )
     plt.ylabel(r"Y-coordinate of centre", fontsize=15)
     plt.xlabel(r"X-coordinate of centre", fontsize=15)
     plt.title("Heliocentric drift of the Earth due to the apparent movement of the Sun")
