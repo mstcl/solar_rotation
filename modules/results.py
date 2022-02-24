@@ -54,7 +54,7 @@ def get_lat(chi: float, B: float, rho: float):
     return np.arcsin(np.sin(B) * np.cos(rho) + np.cos(B) * np.sin(rho) * np.cos(chi))
 
 
-def get_long_i(lat: float, rho: float, chi: float):
+def get_long(lat: float, rho: float, chi: float):
     """
     Returns the difference between longitude of the sunspot and centre of disc
     """
@@ -76,22 +76,35 @@ def get_results(values: dict, spot):
     """
     Calculate the values and return final results
     Also converts all angles into radians
-    Output in degrees
+    Output in radians
     """
     radius_ratio = get_radius_ratio(values["r"], values[f"R{spot+1}"])
     rho = get_rho(radius_ratio, (values["S"] * np.pi / 180) / 7200)
     chi = get_chi(values["P"] * np.pi / 180, values[f"A{spot+1}"] * np.pi / 180)
     lat = get_lat(chi, values["B"] * np.pi / 180, rho)
-    I = get_long_i(lat, rho, chi)
-    return I * 180 / np.pi
+    long = get_long(lat, rho, chi)
+    return (
+        long,
+        lat,
+        chi,
+        rho,
+        radius_ratio,
+    )
 
 
 def driver(sequence: str, spots: int):
     """
     Putting everything together
+    Return results and errors in degrees
     """
     values = sort_data(parse_data(sequence, spots))
-    all_i = np.zeros(spots, dtype="float64")
+    results = {
+        variable: np.zeros(spots, dtype="float64")
+        for variable in ["long", "lat", "chi", "rho", "ratio"]
+    }
+    errors = {
+        variable: np.zeros(spots, dtype="float64") for variable in ["long", "lat"]
+    }
     for spot in range(spots):
         (
             results["long"][spot],
