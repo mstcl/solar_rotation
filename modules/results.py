@@ -93,8 +93,103 @@ def driver(sequence: str, spots: int):
     values = sort_data(parse_data(sequence, spots))
     all_i = np.zeros(spots, dtype="float64")
     for spot in range(spots):
-        all_i[spot] = get_results(values, spot)
-    return all_i
+        (
+            results["long"][spot],
+            results["lat"][spot],
+            results["chi"][spot],
+            results["rho"][spot],
+            results["ratio"][spot],
+        ) = get_results(values, spot)
+    for spot in range(spots):
+        errors["long"][spot], errors["lat"][spot] = get_errors(values, spot, results)
+    return (results["long"] * 180 / np.pi, errors["long"] * 180 / np.pi), (
+        results["lat"] * 180 / np.pi,
+        errors["lat"] * 180 / np.pi,
+    )
+
+
+def get_errors(values: dict, spot: int, results: dict):
+    """
+    Calculate the errors for all variables
+    Output in radians
+    """
+    radius_ratio_error = get_radius_ratio_error(values, spot)
+    rho_error = get_rho_error(radius_ratio_error, values, results["ratio"][spot])
+    chi_error = get_chi_error(values[f"DA{spot+1}"])
+    lat_error = get_lat_error(values, rho_error, chi_error, results, spot)
+    long_error = get_long_error(results, lat_error, chi_error, rho_error, spot)
+    return long_error, lat_error
+
+
+def get_radius_ratio_error(values: dict, spot: int):
+    """
+    Return the error for r/r_0
+    """
+    return (
+        (values[f"DR{spot+1}"] ** 2 / values["r"] ** 2)
+        + (values[f"R{spot+1}"] ** 2 * values["Dr"] ** 2 / values["r"] ** 4)
+    ) ** (1 / 2)
+
+
+def get_rho_error(radius_ratio_error: float, values: dict, radius_ratio: float):
+    """
+    Return the error for rho
+    """
+    return radius_ratio_error * (
+        (1 - radius_ratio**2) ** (-1 / 2) - ((values["S"] * np.pi / 180) / 7200)
+    )
+
+
+def get_chi_error(angle_error: float):
+    """
+    Return the error for chi
+    """
+    return angle_error
+
+
+def get_lat_error(
+    values: dict, rho_error: float, chi_error: float, results: dict, spot: int
+):
+    """
+    Return the error for lat
+    """
+    B = values["B"] * np.pi / 180
+    rho = results["rho"][spot]
+    chi = results["chi"][spot]
+    lat = results["lat"][spot]
+    return (
+        (
+            (np.cos(B) * np.cos(rho) * np.cos(chi) - np.sin(B) * np.sin(rho)) ** 2
+            * rho_error**2
+            + (np.cos(B) * np.sin(rho) * np.sin(chi)) ** 2 * chi_error**2
+        )
+        / np.cos(lat)
+    ) ** (1 / 2)
+
+
+def get_long_error(
+    results: dict,
+    lat_error: float,
+    chi_error: float,
+    rho_error: float,
+    spot: int,
+):
+    """
+    Return the error for I
+    """
+    rho = results["rho"][spot]
+    chi = results["chi"][spot]
+    lat = results["lat"][spot]
+    long_i = results["long"][spot]
+    return (
+        (
+            (np.cos(rho) * np.sin(chi) / np.cos(lat)) ** 2 * rho_error**2
+            + (np.sin(rho) * np.cos(chi) / np.cos(lat)) ** 2 * chi_error**2
+            + (np.sin(rho) * np.sin(chi) * np.tan(lat) / np.cos(lat)) ** 2
+            * lat_error**2
+        )
+        / np.cos(long_i)
+    ) ** (1 / 2)
 
 
 if __name__ == "__main__":
