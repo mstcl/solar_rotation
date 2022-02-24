@@ -63,7 +63,10 @@ def get_radius(r_x: float, r_y: float):
     """
     Return the magnitude of the radius
     """
-    return (r_x**2 + r_y**2) ** (1 / 2)
+    radii = []
+    for component in zip(r_x, r_y):
+        radii.append((component[0] ** 2 + component[1] ** 2) ** (1 / 2))
+    return np.array(radii)
 
 
 if __name__ == "__main__":
