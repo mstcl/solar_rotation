@@ -46,7 +46,6 @@ def parse_data(
                 "r",
                 encoding="utf-8",
             ) as sunspot_file:
-                # TODO: error
                 data[file - 1] = (
                     average(
                         [
@@ -56,12 +55,12 @@ def parse_data(
                     )
                     + projection_origin
                 ) - arr[file - 1]
-    return average(data)
+    return data
 
 
-def get_radius(r_x: float, r_y: float):
+def get_radius(r_x: np.ndarray, r_y: np.ndarray):
     """
-    Return the magnitude of the radius
+    Return the magnitude of the radius for all images
     """
     radii = []
     for component in zip(r_x, r_y):
