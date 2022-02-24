@@ -40,12 +40,12 @@ def parse_data(files_num: list, sequence: str, full: bool):
         return (
             x_arr,
             y_arr,
-            np.average(np.delete(radii, missing_indices)),
+            np.array(0),
         )
     return (
         np.delete(x_arr, missing_indices),
         np.delete(y_arr, missing_indices),
-        np.average(np.delete(radii, missing_indices)),
+        np.delete(radii, missing_indices),
     )
 
 
