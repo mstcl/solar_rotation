@@ -55,7 +55,10 @@ def parse_data(
                     )
                     + projection_origin
                 ) - arr[file - 1]
-    return data
+    missing_indices = [
+        n - 1 for n in range(max(files_num)) if n not in files_num and n != 0
+    ]
+    return np.delete(data, missing_indices)
 
 
 def get_radius(r_x: np.ndarray, r_y: np.ndarray):

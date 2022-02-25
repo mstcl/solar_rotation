@@ -8,6 +8,25 @@ from numpy.lib.function_base import average
 import numpy as np
 
 
+def get_value(sequence: str, target: str):
+    """
+    Return the normal
+    """
+    if not file_exists(f"./{sequence}/data.txt"):
+        raise FileNotFoundError(
+            f"./{sequence}/data.txt was not found in this sequence. Run init.sh first."
+        )
+    with open(f"./{sequence}/data.txt", "r", encoding="utf-8") as file:
+        data = {
+            line.split(" ")[0]: " ".join(line.split(" ")[1:])
+            for line in file.readlines()
+        }
+    value = data.get(target, None)
+    assert (
+        value is not None
+    ), f"This value {target} was not found. Make sure to run the required functions first."
+    return float(value)
+
 def find_std(data: np.ndarray, num: int):
     """
     Find the standard deviation on the mean of a sample

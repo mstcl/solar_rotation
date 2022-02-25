@@ -89,8 +89,8 @@ def resolve_sunspots(args, sequence: str, files_num: list):
         r_x = sunspotting.parse_data(0, x_arr, files_num, spot + 1, sequence)
         r_y = sunspotting.parse_data(1, y_arr, files_num, spot + 1, sequence)
         radii_pop = sunspotting.get_radius(r_x, r_y)
-        angle_pop = theta.get_angle(r_x, r_y, -1 / equator.get_line(x_arr, y_arr)[0])
         radii_spots[spot] = helper.find_average(radii_pop)
+        angle_pop = theta.get_angle(r_x, r_y, helper.get_value(sequence, "N"))
         angle_spots[spot] = helper.find_average(angle_pop)
         resolve_sunspots_errors(
             radii_pop,
@@ -124,11 +124,13 @@ def resolve_results(args, sequence: str):
     """
     Separate function to fetch and write the final results
     """
-    long_data, lat_data = results.driver(sequence, int(args.result))
+    long_data, lat_data, other_errors, other_data = results.driver(sequence, int(args.result))
     _ = helper.write_data("I", long_data[0], sequence)
     _ = helper.write_data("DI", long_data[1], sequence)
     _ = helper.write_data("K", lat_data[0], sequence)
-    is_result_saved = helper.write_data("DK", lat_data[1], sequence)
+    _ = helper.write_data("DK", lat_data[1], sequence)
+    _ = helper.write_data("E", other_errors, sequence)
+    is_result_saved = helper.write_data("M", other_data, sequence)
     return is_result_saved
 
 

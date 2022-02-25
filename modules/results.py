@@ -18,7 +18,10 @@ def parse_data(sequence: str, spots: int):
             f"./{sequence}/data.txt was not found in this sequence. Run init.sh first."
         )
     with open(f"./{sequence}/data.txt", "r", encoding="utf-8") as file:
-        data = [line.strip("\n").split(" ") for line in file.readlines()]
+        data = [
+            [line.strip("\n").split(" ")[0], " ".join(line.split(" ")[1:])]
+            for line in file.readlines()
+        ]
     assert (
         len(data) >= 8 + 2 * spots
     ), "The database is not populated correctly, please run all the other commands first"
@@ -67,7 +70,7 @@ def sort_data(data: list):
     """
     values = {}
     for entry in data:
-        if entry[0] not in {"D", "T"}:
+        if entry[0][0] not in {"d", "T", "E", "M"}:
             values[entry[0]] = float(entry[1])
     return values
 
@@ -103,8 +106,11 @@ def driver(sequence: str, spots: int):
         for variable in ["long", "lat", "chi", "rho", "ratio"]
     }
     errors = {
-        variable: np.zeros(spots, dtype="float64") for variable in ["long", "lat"]
+        variable: np.zeros(spots, dtype=object)
+        for variable in ["long", "lat", "errors"]
     }
+    other_data = np.zeros(spots, dtype=object)
+    conv = 180 / np.pi
     for spot in range(spots):
         (
             results["long"][spot],
@@ -113,25 +119,39 @@ def driver(sequence: str, spots: int):
             results["rho"][spot],
             results["ratio"][spot],
         ) = get_results(values, spot)
+        other_data[
+            spot
+        ] = f"RATIO {results['ratio'][spot]*conv} RHO {results['rho'][spot]*conv} CHI {results['chi'][spot]*conv}"
     for spot in range(spots):
-        errors["long"][spot], errors["lat"][spot] = get_errors(values, spot, results)
-    return (results["long"] * 180 / np.pi, errors["long"] * 180 / np.pi), (
-        results["lat"] * 180 / np.pi,
-        errors["lat"] * 180 / np.pi,
+        errors["long"][spot], errors["lat"][spot], errors["errors"][spot] = get_errors(
+            values, spot, results
+        )
+    return (
+        (results["long"] * conv, errors["long"]),
+        (
+            results["lat"] * conv,
+            errors["lat"],
+        ),
+        errors["errors"],
+        other_data,
     )
 
 
 def get_errors(values: dict, spot: int, results: dict):
     """
     Calculate the errors for all variables
-    Output in radians
+    Output in degrees
     """
     radius_ratio_error = get_radius_ratio_error(values, spot)
     rho_error = get_rho_error(radius_ratio_error, values, results["ratio"][spot])
     chi_error = get_chi_error(values[f"DA{spot+1}"])
     lat_error = get_lat_error(values, rho_error, chi_error, results, spot)
     long_error = get_long_error(results, lat_error, chi_error, rho_error, spot)
-    return long_error, lat_error
+    conv = 180 / np.pi
+    other_errors = (
+        f"DRAT {radius_ratio_error*conv} DRHO {rho_error*conv} DCHI {chi_error*conv}"
+    )
+    return str(long_error * conv), str(lat_error * conv), other_errors
 
 
 def get_radius_ratio_error(values: dict, spot: int):
