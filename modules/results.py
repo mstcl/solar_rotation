@@ -121,7 +121,7 @@ def driver(sequence: str, spots: int):
         ) = get_results(values, spot)
         other_data[
             spot
-        ] = f"RATIO {results['ratio'][spot]*conv} RHO {results['rho'][spot]*conv} CHI {results['chi'][spot]*conv}"
+        ] = f"RATIO {results['ratio'][spot]} RHO {results['rho'][spot]*conv} CHI {results['chi'][spot]*conv}"
     for spot in range(spots):
         errors["long"][spot], errors["lat"][spot], errors["errors"][spot] = get_errors(
             values, spot, results
