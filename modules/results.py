@@ -196,7 +196,7 @@ def get_lat_error(
             * rho_error**2
             + (np.cos(B) * np.sin(rho) * np.sin(chi)) ** 2 * chi_error**2
         )
-        / np.cos(lat)
+        / np.cos(lat)**2
     ) ** (1 / 2)
 
 
@@ -221,7 +221,7 @@ def get_long_error(
             + (np.sin(rho) * np.sin(chi) * np.tan(lat) / np.cos(lat)) ** 2
             * lat_error**2
         )
-        / np.cos(long_i)
+        / np.cos(long_i)**2
     ) ** (1 / 2)
 
 
