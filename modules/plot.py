@@ -16,10 +16,10 @@ def plot_equator(x_arr: np.ndarray, y_arr: np.ndarray, sequence: str, line: tupl
     plt.plot(
         x_arr, y_int, "r-", label="interpolated"
     )
-    plt.ylabel(r"Y-coordinate of centre", fontsize=15)
-    plt.xlabel(r"X-coordinate of centre", fontsize=15)
-    plt.title("Heliocentric drift of the Earth due to the apparent movement of the Sun")
-    plt.legend(loc="upper right")
+    plt.ylabel(r"Y-coordinate of centre / pixel", fontsize=15)
+    plt.xlabel(r"X-coordinate of centre / pixel", fontsize=15)
+    plt.title("Apparent movement of the Sun due to Earth's rotation")
+    # plt.legend(loc="upper right") # Uncomment for legend
     plt.errorbar(x_arr, y_arr, yerr=5, xerr=5, fmt="x", capsize=2)
     plt.savefig(f"./{sequence}/equatorial_plane.png", format="png", dpi=150)
     return True
