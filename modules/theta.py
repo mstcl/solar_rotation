@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Find the angle between celestial north and sunspot
 """

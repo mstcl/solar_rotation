@@ -1,5 +1,6 @@
-#!/usr/bin/env python
-"""Plot the movement of the images and save it"""
+"""
+Plot the movement of the images and save it
+"""
 
 import matplotlib.pyplot as plt
 import numpy as np

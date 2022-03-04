@@ -1,5 +1,6 @@
-#!/usr/bin/env python
-"""Fetch the centres of the sun discs"""
+"""
+Fetch the centres of the sun discs
+"""
 
 from os.path import exists as file_exists
 import numpy as np

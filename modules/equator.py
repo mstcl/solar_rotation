@@ -1,5 +1,6 @@
-#!/usr/bin/env python
-"""Find the equation of the line given a set of x,y values"""
+"""
+Find the equation of the line given a set of x,y values
+"""
 
 import numpy as np
 from . import helper

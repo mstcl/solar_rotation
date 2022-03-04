@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Find and return the final results, B and I of all the
 sunspots in the sequence
@@ -30,7 +29,7 @@ def parse_data(sequence: str, spots: int):
 
 def get_radius_ratio(radius_disc: float, radius_sunspot: float):
     """
-    Returns the angle alpha/S
+    Return the angle alpha/S
     alpha is rho_1, renamed for easier distinction
     """
     return radius_sunspot / radius_disc
@@ -38,28 +37,28 @@ def get_radius_ratio(radius_disc: float, radius_sunspot: float):
 
 def get_rho(radius_ratio: float, S: float):
     """
-    Returns the angle rho
+    Return the angle rho
     """
     return np.arcsin(radius_ratio) - ((radius_ratio) * S)
 
 
 def get_chi(P: float, angle: float):
     """
-    Returns the angle chi
+    Return the angle chi
     """
     return P - angle
 
 
 def get_lat(chi: float, B: float, rho: float):
     """
-    Returns the latitude of the sunspot
+    Return the latitude of the sunspot
     """
     return np.arcsin(np.sin(B) * np.cos(rho) + np.cos(B) * np.sin(rho) * np.cos(chi))
 
 
 def get_long(lat: float, rho: float, chi: float):
     """
-    Returns the difference between longitude of the sunspot and centre of disc
+    Return the difference between longitude of the sunspot and centre of disc
     """
     return np.arcsin(np.sin(rho) * np.sin(chi) / np.cos(lat))
 

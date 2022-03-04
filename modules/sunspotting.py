@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Find the coordinate of sunspots
 """
