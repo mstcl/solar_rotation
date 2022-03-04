@@ -147,9 +147,7 @@ def get_errors(values: dict, spot: int, results: dict):
     lat_error = get_lat_error(values, rho_error, chi_error, results, spot)
     long_error = get_long_error(results, lat_error, chi_error, rho_error, spot)
     rad_to_deg = 180 / np.pi
-    other_errors = (
-        f"DRAT {radius_ratio_error*rad_to_deg} DRHO {rho_error*rad_to_deg} DCHI {chi_error*rad_to_deg}"
-    )
+    other_errors = f"DRAT {radius_ratio_error*rad_to_deg} DRHO {rho_error*rad_to_deg} DCHI {chi_error*rad_to_deg}"
     return str(long_error * rad_to_deg), str(lat_error * rad_to_deg), other_errors
 
 
@@ -195,7 +193,7 @@ def get_lat_error(
             * rho_error**2
             + (np.cos(B) * np.sin(rho) * np.sin(chi)) ** 2 * chi_error**2
         )
-        / np.cos(lat)**2
+        / np.cos(lat) ** 2
     ) ** (1 / 2)
 
 
@@ -220,7 +218,7 @@ def get_long_error(
             + (np.sin(rho) * np.sin(chi) * np.tan(lat) / np.cos(lat)) ** 2
             * lat_error**2
         )
-        / np.cos(long_i)**2
+        / np.cos(long_i) ** 2
     ) ** (1 / 2)
 
 
