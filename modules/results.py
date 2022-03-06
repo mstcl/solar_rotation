@@ -174,7 +174,7 @@ def get_chi_error(angle_error: float):
     """
     Return the error for chi
     """
-    return angle_error
+    return angle_error * np.pi / 180
 
 
 def get_lat_error(
