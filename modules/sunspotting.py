@@ -31,7 +31,7 @@ def parse_data(
             projection_origin = list(
                 map(
                     float,
-                    projection_file.readlines()[3].split(" ")[0][11:-1].split(","),
+                    projection_file.readlines()[3].split(" ")[0][11:-2].split(","),
                 )
             )[criteria]
             if not file_exists(
