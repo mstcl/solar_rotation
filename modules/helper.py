@@ -30,6 +30,7 @@ def find_std(data: np.ndarray, num: int):
     """
     Find the standard deviation on the mean of a sample
     """
+    num = len(data)
     sample_var = 0
     avg = find_average(data)
     for var in data:

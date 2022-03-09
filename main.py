@@ -64,7 +64,7 @@ def resolve_args(args):
                 is_radius_saved,
             )
     else:
-        print("Program needs some data to parse! Run with -h for help")
+        print("Program needs some data to parse! Run with -h for help.")
 
 
 def resolve_radius_errors(radii_pop: np.ndarray, sequence: str, size: int):
