@@ -4,11 +4,10 @@ Python scripts to determine the rate of rotation of the Sun on its axis (data fi
 
 ## Requirements
 
-* python3
-* `numpy`
-* `matplotlib`
-* Shell scripts are written for POSIX-compliant systems.
-
+- python3
+- `numpy`
+- `matplotlib`
+- Shell scripts are written for POSIX-compliant systems.
 
 ## Download
 
@@ -25,27 +24,29 @@ There is no installation, this is portable.
 
 ```
 $ cd solar_rotation
-$ ./main.py -h
+$ ./sunspot_analysis.py -h
 ```
 
-There is no documentation. Run `./main.py -h` for descriptions of what to do.
-The data needs to be structured in a very specific hierarchy and also
-specifically named.
+There is no documentation. Run `./sunspot_analysis.py -h` for descriptions of
+what to do. The data needs to be structured in a specific hierarchy and also
+specifically named. The file `./rotational_rate_analysis.py` contains the
+calculations to obtain rotational periods.
 
 Shell scripts provided can automate certain file operations, and can be run as
 
 ```
 $ ./script.sh arg1 arg2 arg3 …
 ```
+
 Check source code for details on what they do and the arguments required.
 
-## TODO
+## Things to do
 
-* [x] Parse all and analyse data
-  * [x] Variables
-  * [x] Results
-* [x] Include error calculations
-* [ ] Produce final plots
+- [x] Parse all and analyse data
+  - [x] Variables
+  - [x] Results
+- [x] Include error calculations
+- [x] Produce final plots
 
 ## LICENSE
 
