@@ -3,7 +3,6 @@ Find and return the final results, B and I of all the
 sunspots in the sequence
 """
 
-from os.path import exists as file_exists
 import numpy as np
 from . import helper
 
@@ -12,10 +11,7 @@ def parse_data(sequence: str, spots: int):
     """
     Parse all the variables into a table
     """
-    if not file_exists(f"./{sequence}/data.txt"):
-        raise FileNotFoundError(
-            f"./{sequence}/data.txt was not found in this sequence. Run init.sh first."
-        )
+    helper.check_file(f"./{sequence}/data.txt")
     with open(f"./{sequence}/data.txt", "r", encoding="utf-8") as file:
         data = [
             [line.strip("\n").split(" ")[0], " ".join(line.split(" ")[1:])]

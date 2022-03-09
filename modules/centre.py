@@ -2,7 +2,6 @@
 Fetch the centres of the sun discs
 """
 
-from os.path import exists as file_exists
 import numpy as np
 from . import helper
 
@@ -16,10 +15,7 @@ def parse_data(files_num: list, sequence: str, full: bool):
     )
     radii = np.array(x_arr)
     for file in files_num:
-        if not file_exists(f"./{sequence}/regions/sun_disc_{file}.reg"):
-            raise FileNotFoundError(
-                "Check name format, sequence name, and number of files and try again.\n"
-            )
+        helper.check_file(f"./{sequence}/regions/sun_disc_{file}.reg")
         with open(
             f"./{sequence}/regions/sun_disc_{file}.reg", "r", encoding="utf-8"
         ) as regionfile:
