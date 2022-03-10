@@ -37,11 +37,13 @@ def get_value(sequence: str, target: str):
     return float(value)
 
 
-def find_std(data: np.ndarray, num: int):
+def find_std(data: np.ndarray):
     """
     Find the standard deviation on the mean of a sample
     """
     num = len(data)
+    if num == 1:
+        return 0
     sample_var = 0
     avg = find_average(data)
     for var in data:

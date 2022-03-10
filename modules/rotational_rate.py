@@ -66,7 +66,7 @@ def fetch_data(spot: int):
     return data
 
 
-def driver(spot: int):
+def driver(spot: int, is_nasa: bool):
     """
     Fetch all quantities
     Send to plot.py
@@ -91,7 +91,7 @@ def driver(spot: int):
         periods.append(get_period(freqs[i]) * sidereal_correction)
         periods_err.append(get_period_error(freqs[i], freqs_err[i]))
     plot.plot_long_against_jd(
-        np.array(longs), np.array(dates), np.array(freqs), np.array(longs_err), spot
+        np.array(longs), np.array(dates), np.array(freqs), np.array(longs_err), spot, is_nasa
     )
     plot.plot_lat_against_jd(np.array(lats), np.array(dates), np.array(longs_err), spot)
     write_final_results(longs, dates, periods, periods_err, spot)
@@ -109,7 +109,7 @@ def write_final_results(longs, dates, periods, periods_err, spot: int):
         interp_period_err = 0
     exp_period = helper.find_average(periods)
     exp_period_err = max(
-        helper.find_std(periods, len(periods)), helper.find_average(periods_err)
+        helper.find_std(periods), helper.find_average(periods_err)
     )
     helper.write_data_final(f"P{spot}", [str(exp_period), str(exp_period_err)])
     helper.write_data_final(f"C{spot}", [str(interp_period), str(interp_period_err)])

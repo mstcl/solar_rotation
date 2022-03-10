@@ -28,21 +28,28 @@ def plot_long_against_jd(
     freqs: np.ndarray,
     longs_err: np.ndarray,
     spot: int,
+    is_nasa: bool
 ):
     """
     Plot longitude of a feature against JD
     """
+    factor = 1
+    if is_nasa:
+        factor = -1
     plt.clf()
-    intercept_max = longs[0] + max(freqs) * dates[0]
-    intercept_min = longs[0] + min(freqs) * dates[0]
-    y_pred_max = -max(freqs) * dates + intercept_max
-    y_pred_min = -min(freqs) * dates + intercept_min
+    intercept_max = longs[0] + factor*max(freqs) * dates[0]
+    intercept_min = longs[0] + factor*min(freqs) * dates[0]
+    y_pred_max = -factor*max(freqs) * dates + intercept_max
+    y_pred_min = -factor*min(freqs) * dates + intercept_min
     plt.plot(dates, y_pred_max, "g:", label="longitude max")
     plt.plot(dates, y_pred_min, "b:", label="longitude min")
     plt.ylabel(r"$L$ - $L_0$ / $\circ$", fontsize=15)
     plt.xlabel(r"Julian day / days", fontsize=15)
     plt.title(f"Displacement of feature {spot} due to solar rotation", fontsize=15)
-    plt.legend(loc="upper right")
+    if is_nasa:
+        plt.legend(loc="upper left")
+    else:
+        plt.legend(loc="upper right")
     plt.errorbar(dates, longs, yerr=longs_err, xerr=0, fmt="xk", capsize=2)
     plt.savefig(f"./dataset/long_{spot}.png", format="png", dpi=150)
 
