@@ -43,11 +43,11 @@ def compute_values(data: dict):
     for key, value in data.items():
         avg_data[key][column_key["long"]] = helper.find_average(value[0])
         avg_data[key][column_key["long_err"]] = max(
-            helper.find_std(value[0], len(value[0])), helper.find_average(value[1])
+            helper.find_std(value[0]), helper.find_average(value[1])
         )
         avg_data[key][column_key["lat"]] = helper.find_average(value[2])
         avg_data[key][column_key["lat_err"]] = max(
-            helper.find_std(value[2], len(value[3])), helper.find_average(value[1])
+            helper.find_std(value[2]), helper.find_average(value[1])
         )
     return avg_data
 
@@ -71,6 +71,7 @@ def main():
     """
     parser = argparse.ArgumentParser()
     parser.add_argument("spot", help="The ID of the spot to be analysed")
+    parser.add_argument("-a", "--nasa", help="Using SDO trend", action="store_true")
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
         "-s", "--stats", help="Find average and std", action="store_true"
@@ -85,7 +86,7 @@ def main():
             avg_data = compute_values(data)
             write_to_file(avg_data, args.spot)
         if args.expect:
-            rotational_rate.driver(args.spot)
+            rotational_rate.driver(args.spot, args.nasa)
     else:
         print("Program needs an argument. Run -h for help.")
 

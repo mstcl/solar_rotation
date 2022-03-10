@@ -42,7 +42,7 @@ def resolve_args(args):
             is_radius_saved = helper.write_data(
                 "r", helper.find_average(radii_disc), sequence
             )
-            resolve_radius_errors(radii_disc, sequence, len(files_num))
+            resolve_radius_errors(radii_disc, sequence)
         if args.normal:
             normal = -1 / helper.get_line(x_arr, y_arr)[0][0]
             is_normal_saved = helper.write_data("N", normal, sequence)
@@ -66,11 +66,11 @@ def resolve_args(args):
         print("Program needs some data to parse! Run with -h for help.")
 
 
-def resolve_radius_errors(radii_pop: np.ndarray, sequence: str, size: int):
+def resolve_radius_errors(radii_pop: np.ndarray, sequence: str):
     """
     Separate function to find and write sun disc radii
     """
-    radii_std = helper.find_std(radii_pop, size)
+    radii_std = helper.find_std(radii_pop)
     _ = helper.write_data("Dr", radii_std, sequence)
 
 
@@ -89,32 +89,24 @@ def resolve_sunspots(args, sequence: str, files_num: list):
         r_y = sunspotting.parse_data(1, y_arr, files_num, spot + 1, sequence)
         radii_pop = sunspotting.get_radius(r_x, r_y)
         radii_spots[spot] = helper.find_average(radii_pop)
-        angle_pop = theta.get_angle(r_x, r_y, helper.get_value(sequence, "N"))
-        angle_spots[spot] = helper.find_average(angle_pop)
-        resolve_sunspots_errors(
-            radii_pop,
-            angle_pop,
-            len(files_num),
-            sequence,
-            spot
+        angle_pop = theta.get_angle(
+            r_x, r_y, helper.get_value(sequence, "N"), args.nasa
         )
+        angle_spots[spot] = helper.find_average(angle_pop)
+        resolve_sunspots_errors(radii_pop, angle_pop, sequence, spot)
     _ = helper.write_data("A", angle_spots, sequence)
     is_sunspots_saved = helper.write_data("R", radii_spots, sequence)
     return is_sunspots_saved
 
 
 def resolve_sunspots_errors(
-    radii_pop: np.ndarray,
-    angle_pop: np.ndarray,
-    size: int,
-    sequence: str,
-    spot: int
+    radii_pop: np.ndarray, angle_pop: np.ndarray, sequence: str, spot: int
 ):
     """
     Separate function for sunspot errors
     """
-    radii_std = helper.find_std(radii_pop, size)
-    angle_std = helper.find_std(angle_pop, size)
+    radii_std = helper.find_std(radii_pop)
+    angle_std = helper.find_std(angle_pop)
     _ = helper.write_data(f"DR{spot+1}", radii_std, sequence)
     _ = helper.write_data(f"DA{spot+1}", angle_std, sequence)
 
@@ -123,7 +115,9 @@ def resolve_results(args, sequence: str):
     """
     Separate function to fetch and write the final results
     """
-    long_data, lat_data, other_errors, other_data = results.driver(sequence, int(args.result))
+    long_data, lat_data, other_errors, other_data = results.driver(
+        sequence, int(args.result)
+    )
     _ = helper.write_data("I", long_data[0], sequence)
     _ = helper.write_data("DI", long_data[1], sequence)
     _ = helper.write_data("K", lat_data[0], sequence)
@@ -140,6 +134,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("number", help="Files to parse, e.g. 1-2,5-12")
     parser.add_argument("sequence", help="Date and sequence")
+    parser.add_argument("-a", "--nasa", help="Analyse SDO data", action="store_true")
     parser.add_argument(
         "-v", "--verbose", help="Show more information", action="store_true"
     )
