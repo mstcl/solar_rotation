@@ -4,8 +4,8 @@ Calculations related to the analysis
 of sunspots across multiply days
 """
 
-import numpy as np
 import argparse
+import numpy as np
 
 from modules import helper
 from modules import rotational_rate
